@@ -39,6 +39,12 @@ html{width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%}button,input,sel
 @media(max-width:720px){.home .solar-system{width:1060px;max-width:none;height:620px;min-height:620px;transform:translate(-50%,-50%) scale(.52)}.home-content{padding:22px 16px}.home .label{letter-spacing:3px}.home{height:calc(100svh - 110px);min-height:480px}.top{flex-wrap:nowrap}.brand{flex:1;min-width:0}.brand h1{font-size:clamp(15px,4.4vw,20px)}.top .btn{white-space:nowrap}.manual-add{display:grid;grid-template-columns:minmax(0,1fr) 94px;gap:10px}.add-input{width:100%;grid-column:1 / -1;font-size:16px}.add-select{width:100%;font-size:16px}.manual-add .btn{width:100%;min-height:44px}.settings .panel{padding:16px}.settings .row{grid-template-columns:30px minmax(0,1fr) 90px}.filebox{padding:18px 10px;white-space:normal}.filebox b{font-size:14px}.stage.on{padding:122px 10px 86px}.stage-caption{top:max(24px,env(safe-area-inset-top));font-size:12px;letter-spacing:2px;padding:0 12px;text-align:center}.summon-word{top:68px;font-size:23px;letter-spacing:3px}.stage .results{margin:0;max-height:calc(100dvh - 220px);width:100%;gap:12px;padding:18px 8px}.stage .card{width:calc((100% - 12px) / 2);max-width:155px;height:210px;flex:none}.rarity{letter-spacing:1px}.stage .done{bottom:max(16px,env(safe-area-inset-bottom));min-height:48px}.person{font-size:30px}}
 @media(max-width:360px){.app{padding:12px}.sigil{width:30px;height:30px}.brand{gap:6px}.top .btn{font-size:11px;padding:8px}.eyebrow{letter-spacing:.5px}.home h2{font-size:29px}.home .solar-system{transform:translate(-50%,-50%) scale(.43)}.stage .card{height:195px}.card-inner{padding:14px 7px}}
 @media(max-height:500px) and (orientation:landscape){.home{min-height:340px}.stage.on{padding-top:82px}.stage .results{max-height:calc(100dvh - 160px)}.stage-caption{top:12px}.summon-word{top:36px;font-size:18px}.stage .card{width:128px;height:185px}.stage .done{min-height:44px;padding:10px 25px}}
+</style><style>
+/* Perspective-projected orbital scene: near-side objects scale up and pass in front. */
+.solar-system{filter:none;isolation:isolate}.solar-system .orbit-track{display:none}.solar-system .sun{z-index:3}.solar-system .planet{left:50%;top:50%;offset-path:none;offset-distance:0%;animation:planet-spin 7s linear infinite;will-change:transform;pointer-events:none}.solar-system .p-jupiter{animation:jupiter-drift 18s linear infinite,planet-spin 7s linear infinite}.orbital-depth{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}.orbital-depth.back{z-index:0}.orbital-depth.front{z-index:4}.orbital-depth path{fill:none;stroke-linecap:round;vector-effect:non-scaling-stroke}.solar-system:before{z-index:-1}.home-content{z-index:10}.poolstat::after{content:'SOLAR ORBITS · 行星星轨';display:block;font-size:9px;letter-spacing:2px;opacity:.55;margin-top:10px}
+</style><style>
+/* Each planet has its own orbital inclination and ascending node. */
+.solar-system .p-mercury{width:15px;height:15px;color:#c1b7a4;background:radial-gradient(circle at 32% 25%,#e8e4d7,#8f887c 48%,#373a3b 85%);box-shadow:0 0 12px #d8cdbd44}.solar-system .p-venus{width:27px;height:27px;color:#e6c18b;background:repeating-linear-gradient(157deg,#b28b55 0 2px,#ead7a6 4px 7px,#c1a16b 8px 10px);box-shadow:inset -7px -5px 10px #32291e88,0 0 13px #eed7a44d}.solar-system .p-neptune{width:30px;height:30px;color:#6b95ff;background:radial-gradient(circle at 31% 26%,#b5d5ff,#386dcc 45%,#102d73 80%,#07142d);box-shadow:inset -6px -5px 10px #08122eaa,0 0 17px #547bea66}
 </style></head><body><main class="app"><header class="top"><div class="brand"><div class="sigil">✦</div><div><div class="eyebrow">CLUB SUMMON</div><h1>社团星轨召唤</h1></div></div><button class="btn" id="settingsBtn">名单与设置</button></header><section class="home" id="home"><div class="ambient-meteors"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="solar-system" aria-hidden="true"><div class="sun"></div><div class="orbit-track orbit-1"><span class="planet p-blue"></span></div><div class="orbit-track orbit-2"><span class="planet p-red"></span></div><div class="orbit-track orbit-3"><span class="planet p-ring"></span></div><div class="orbit-track orbit-4"><span class="planet p-earth"></span></div><div class="orbit-track orbit-5"><span class="planet p-ice"></span></div><div class="orbit-track orbit-6"><span class="planet p-jupiter"></span></div></div><div class="home-content"><div class="label">DESTINY CARD POOL</div><h2>准备召唤</h2><p>让星轨揭晓本次入选成员</p><button class="btn primary large" id="start">开始抽卡　✦</button><div class="poolstat" id="poolstat">卡池尚未载入</div></div></section></main>
 <section class="stage" id="stage"><div class="meteors"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="beam"></div><div class="stage-caption" id="caption">STARLIGHT RESONANCE</div><div class="summon-word" id="summonWord">命运星轨启动</div><div class="results" id="results"></div><button class="btn primary large done" id="done">返回主界面</button></section>
 <div class="settings" id="settings"><div class="panel"><div class="panel-head centered-head"><h3>名单设置</h3><button class="x" id="closeSettings">×</button></div><section class="settings-block import-block"><label class="filebox" for="file"><b>导入名单（支持：.xlsx、.xls、.csv）</b><input id="file" type="file" accept=".xlsx,.xls,.csv"></label></section><section class="settings-block records-block"><div class="block-title">已导入记录</div><div class="hint">名单仅供本次使用，关闭或刷新页面后自动清空。</div><div class="filemeta"><span id="filename">尚未导入文件</span><button class="danger" id="deleteRoster">清空名单</button></div><div class="summary" id="summary">完整名单：0 人</div><div class="list" id="list"></div></section><section class="settings-block manual-block"><div class="block-title">手动添加成员</div><div class="manual-add"><input id="manualName" class="add-input" placeholder="输入成员姓名"><select id="manualRole" class="add-select"><option value="部员">部员</option><option value="部长">部长</option><option value="主席">主席</option></select><button class="btn primary" id="addManual">添加</button></div><div class="hint">身份分为部员、部长、主席，添加后会立即进入当前卡池。</div><div class="toast" id="toast">添加成功</div></section></div></div>
@@ -115,6 +121,40 @@ $('#done').onclick=()=>$('#stage').classList.remove('on');render();</script><sty
   setTimeout(launch,rand(180,820));
  }
  setTimeout(launch,250);
+})();
+</script><script>
+(()=>{
+ const scene=document.querySelector('.solar-system'),ns='http://www.w3.org/2000/svg',deg=Math.PI/180;
+ // J2000 orbital elements: NASA/JPL Approximate Positions, Table 1.
+ // Orbit angles and eccentricities use the reference values; visual distances and time are compressed.
+ const orbits=[
+ {name:'水星',className:'p-mercury',radius:100,speed:12,phase:.4,e:.20563593,i:7.00497902,node:48.33076593,peri:77.45779628},
+ {name:'金星',className:'p-venus',radius:142,speed:18,phase:3.1,e:.00677672,i:3.39467605,node:76.67984255,peri:131.60246718},
+ {name:'地球',className:'p-earth',radius:184,speed:24,phase:1.2,e:.01671123,i:0,node:0,peri:102.93768193},
+ {name:'火星',className:'p-red',radius:228,speed:32,phase:4.2,e:.09339410,i:1.84969142,node:49.55953891,peri:-23.94362959},
+ {name:'木星',className:'p-jupiter',radius:276,speed:55,phase:2.6,e:.04838624,i:1.30439695,node:100.47390909,peri:14.72847983},
+ {name:'土星',className:'p-ring',radius:322,speed:75,phase:4.6,e:.05386179,i:2.48599187,node:113.66242448,peri:92.59887831},
+ {name:'天王星',className:'p-ice',radius:366,speed:98,phase:5.6,e:.04725744,i:.77263783,node:74.01692503,peri:170.95427630},
+ {name:'海王星',className:'p-neptune',radius:406,speed:120,phase:.7,e:.00859048,i:1.77004347,node:131.78422574,peri:44.96476227}
+ ];
+ scene.querySelectorAll('.planet,.orbital-depth').forEach(node=>node.remove());
+ const planets=orbits.map(orbit=>{const p=document.createElement('span');p.className='planet '+orbit.className;p.title=orbit.name+' · 轨道倾角 '+orbit.i.toFixed(2)+'°';p.dataset.planet=orbit.name;p.dataset.inclination=String(orbit.i);scene.appendChild(p);return p});
+ const layers=['back','front'].map(side=>{const svg=document.createElementNS(ns,'svg');svg.classList.add('orbital-depth',side);svg.setAttribute('aria-hidden','true');scene.appendChild(svg);return svg});
+ const cameraTilt=63*deg,cameraRoll=-25*deg,perspective=1100;
+ function project(orbit,E){
+  const x=orbit.radius*(Math.cos(E)-orbit.e),y=orbit.radius*Math.sqrt(1-orbit.e*orbit.e)*Math.sin(E);
+  const omega=(orbit.peri-orbit.node)*deg,I=orbit.i*deg,O=orbit.node*deg;
+  const X=(Math.cos(omega)*Math.cos(O)-Math.sin(omega)*Math.sin(O)*Math.cos(I))*x+(-Math.sin(omega)*Math.cos(O)-Math.cos(omega)*Math.sin(O)*Math.cos(I))*y;
+  const Y=(Math.cos(omega)*Math.sin(O)+Math.sin(omega)*Math.cos(O)*Math.cos(I))*x+(-Math.sin(omega)*Math.sin(O)+Math.cos(omega)*Math.cos(O)*Math.cos(I))*y;
+  const Z=Math.sin(omega)*Math.sin(I)*x+Math.cos(omega)*Math.sin(I)*y;
+  const screenY=Y*Math.cos(cameraTilt)-Z*Math.sin(cameraTilt),depth=Y*Math.sin(cameraTilt)+Z*Math.cos(cameraTilt),scale=perspective/(perspective-depth);
+  return{x:(X*Math.cos(cameraRoll)-screenY*Math.sin(cameraRoll))*scale,y:(X*Math.sin(cameraRoll)+screenY*Math.cos(cameraRoll))*scale,z:depth,scale};
+ }
+ function drawTracks(){const w=scene.clientWidth,h=scene.clientHeight;layers.forEach(layer=>{layer.setAttribute('viewBox','0 0 '+w+' '+h);layer.replaceChildren()});orbits.forEach((orbit,index)=>layers.forEach((layer,side)=>{const path=document.createElementNS(ns,'path');let d='',drawing=false;for(let j=0;j<=400;j++){const p=project(orbit,j*Math.PI*2/400),visible=side?p.z>=0:p.z<=0;if(visible){d+=(drawing?' L':' M')+(w/2+p.x).toFixed(2)+' '+(h/2+p.y).toFixed(2);drawing=true}else drawing=false}path.setAttribute('d',d);path.setAttribute('stroke',index===5?(side?'#f3cf968a':'#f3cf9638'):(side?'#83cfff9c':'#79adf946'));path.setAttribute('stroke-width',side?'1.3':'.85');layer.appendChild(path)}))}
+ let frame=0;const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+ function paint(now){planets.forEach((planet,i)=>{const orbit=orbits[i],M=orbit.phase+(reduced.matches?0:now/1000/orbit.speed*Math.PI*2);let E=M;for(let j=0;j<6;j++)E-=(E-orbit.e*Math.sin(E)-M)/(1-orbit.e*Math.cos(E));const p=project(orbit,E);planet.style.transform='translate('+p.x.toFixed(2)+'px,'+p.y.toFixed(2)+'px) translate(-50%,-50%) scale('+p.scale.toFixed(3)+')';planet.style.zIndex=p.z>0?'5':'1'});if(!document.hidden&&!reduced.matches)frame=requestAnimationFrame(paint)}
+ function resume(){cancelAnimationFrame(frame);paint(performance.now())}
+ drawTracks();resume();window.addEventListener('resize',drawTracks);document.addEventListener('visibilitychange',resume);reduced.addEventListener('change',resume);
 })();
 </script></body></html>
 
